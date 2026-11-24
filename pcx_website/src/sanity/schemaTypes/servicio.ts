@@ -10,6 +10,7 @@ export const servicio = defineType({
       name: 'icono',
       title: 'Ícono',
       type: 'string',
+      options: { list: ['wrench','code','cpu', 'monitor'] },
       description: 'Nombre del ícono (ej: wrench, cpu, shield). Lo conectamos en el código.',
     }),
     defineField({ name: 'descripcion', title: 'Descripción', type: 'text', rows: 3 }),
