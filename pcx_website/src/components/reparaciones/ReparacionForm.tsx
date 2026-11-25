@@ -88,10 +88,9 @@ export default function ReparacionForm({ whatsapp }: { whatsapp: string }) {
   return (
     <section className="bg-neutral-950 text-white">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-        {/* Título: copiá acá las clases de fuente del h1 de tu Hero */}
-        <h1 className="max-w-3xl text-5xl font-extrabold uppercase italic leading-[0.95] sm:text-7xl">
-          Volvamos a poner todo en <span className="text-orange-500">marcha.</span>
-        </h1>
+      <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
+        Volvamos a poner todo en <span className="text-orange-500">marcha.</span>
+      </h1>
         <p className="mt-6 text-sm text-neutral-400">
           Contanos qué le pasa a tu equipo. El primer paso para solucionarlo está acá.
         </p>

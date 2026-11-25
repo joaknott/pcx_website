@@ -1,10 +1,20 @@
 import Link from "next/link";
+import { cacheLife, cacheTag } from "next/cache";
 import { getConfiguracionSitio } from "@/sanity/lib/sitio";
 import { buildWhatsAppUrl } from "@/sanity/lib/whatsapp";
 
 export default async function Footer() {
-  "use cache" //for the problems of rendering and new date()
+  "use cache"; // por los problemas de renderizado y new Date()
+  cacheLife("minutes");
+  cacheTag("sitio");
+
   const config = await getConfiguracionSitio();
+  const horarios: string[] = Array.isArray(config?.horarios)
+    ? config.horarios
+    : (config?.horarios ?? "")
+        .split("\n")
+        .map((l: string) => l.trim())
+        .filter(Boolean);
   const waUrl = config?.whatsapp ? buildWhatsAppUrl(config.whatsapp) : null;
 
   return (
@@ -33,10 +43,10 @@ export default async function Footer() {
           {config?.direccion && (
             <p className="text-sm text-white/70">{config.direccion}</p>
           )}
-          {config?.horarios && config.horarios.length > 0 && (
+          {horarios.length > 0 && (
             <ul className="mt-3 space-y-1 text-sm text-white/60">
-              {config.horarios.map((h) => (
-                <li key={h}>{h}</li>
+              {horarios.map((h, i) => (
+                <li key={i}>{h}</li>
               ))}
             </ul>
           )}

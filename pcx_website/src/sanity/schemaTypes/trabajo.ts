@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export const trabajo = defineType({
   name: 'trabajo',
@@ -19,6 +19,7 @@ export const trabajo = defineType({
         ],
       },
     }),
+    
     defineField({ name: 'descripcion', title: 'Descripción', type: 'text', rows: 3 }),
     defineField({
       name: 'imagenes',
@@ -28,6 +29,17 @@ export const trabajo = defineType({
     }),
     defineField({ name: 'destacado', title: 'Mostrar en el inicio', type: 'boolean', initialValue: false }),
     defineField({ name: 'fecha', title: 'Fecha', type: 'date' }),
+    defineField({
+      name: "videos",
+      title: "Videos",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "file",
+          options: { accept: "video/mp4,video/webm" },
+        }),
+      ],
+    }),
   ],
   preview: { select: { title: 'titulo', subtitle: 'tipo', media: 'imagenes.0' } },
 })
