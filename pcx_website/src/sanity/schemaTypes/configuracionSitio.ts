@@ -18,6 +18,18 @@ export const configuracionSitio = defineType({
     defineField({ name: 'facebook', title: 'Facebook (URL)', type: 'url' }),
     defineField({ name: 'heroTitulo', title: 'Título del hero', type: 'string' }),
     defineField({ name: 'heroSubtitulo', title: 'Subtítulo del hero', type: 'text', rows: 2 }),
+    defineField({
+      name: "heroImagen",
+      title: "Hero: imagen",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "heroVideo",
+      title: "Hero: video (opcional)",
+      type: "file",
+      options: { accept: "video/mp4,video/webm" },
+    }),
   ],
   preview: { prepare: () => ({ title: 'Configuración del sitio' }) },
 })

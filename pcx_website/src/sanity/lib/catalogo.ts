@@ -1,5 +1,6 @@
-import { cacheLife } from "next/cache";
-import { client } from './client'
+import { cacheLife, cacheTag } from "next/cache";
+import type { SanityImageSource } from "@sanity/image-url";
+import { client } from "./client";
 import type { CategoriaValue } from "./categorias";
 
 export type Producto = {
@@ -13,7 +14,7 @@ export type Producto = {
   precio?: number;
   estado?: "nuevo" | "usado" | "reacondicionado";
   disponible?: boolean;
-  imagen?: unknown; // primera imagen deL Sanity
+  imagen?: SanityImageSource;
 };
 
 const CAMPOS = `
@@ -24,7 +25,8 @@ const CAMPOS = `
 export async function getProductos(): Promise<Producto[]> {
   "use cache";
   cacheLife("minutes");
-  return client.fetch(
+  cacheTag("productos");
+  return client.fetch<Producto[]>(
     `*[_type == "producto" && defined(slug.current)] | order(coalesce(orden, 9999) asc, _createdAt desc){${CAMPOS}}`,
   );
 }
@@ -32,5 +34,9 @@ export async function getProductos(): Promise<Producto[]> {
 export async function getProducto(slug: string): Promise<Producto | null> {
   "use cache";
   cacheLife("minutes");
-  return client.fetch(`*[_type == "producto" && slug.current == $slug][0]{${CAMPOS}}`, { slug });
+  cacheTag("productos", `producto-${slug}`);
+  return client.fetch<Producto | null>(
+    `*[_type == "producto" && slug.current == $slug][0]{${CAMPOS}}`,
+    { slug },
+  );
 }

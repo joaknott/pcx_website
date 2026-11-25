@@ -1,92 +1,78 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Plus, ShieldCheck } from "lucide-react";
-import Eyebrow from "./Eyebrow";
-import Reveal from "./Reveal";
+import { ArrowRight, ShieldCheck } from "lucide-react";
+import type { HeroMedia } from "@/sanity/lib/hero";
+import SectionLabel from "./SectionLabel";
 
-export default function Hero() {
+export default function Hero({ media }: { media: HeroMedia }) {
   return (
-    <section className="relative isolate overflow-hidden bg-[#0a0a0a]">
-      <Image
-        src="/hero-pc.png"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="-z-20 object-cover object-right"
-      />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent lg:via-[#0a0a0a]/60" />
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+    <section className="relative overflow-hidden border-b border-neutral-800 bg-neutral-950">
+      {/* Media: fondo en mobile, mitad derecha en desktop */}
+      <div className="absolute inset-0 lg:left-auto lg:w-[55%]">
+        {media.tipo === "video" ? (
+          <video
+            src={media.url}
+            poster={media.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <Image
+            src={media.url}
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 55vw, 100vw"
+            className="object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-neutral-950/75 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-neutral-950 via-neutral-950/50 to-transparent lg:block" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-neutral-950 to-transparent" />
+      </div>
 
-      <div className="mx-auto flex min-h-[640px] max-w-6xl flex-col justify-center px-4 py-20 lg:min-h-[800px]">
-        <Reveal>
-          <Eyebrow>Servicio técnico &amp; tecnología</Eyebrow>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <h1 className="mt-8 font-display text-[clamp(3.5rem,11vw,8rem)] font-bold italic uppercase leading-[0.9] text-white">
-            Tu PC.
-            <br />
-            En su mejor
-            <br />
-            <span className="text-orange-500">versión.</span>
+      <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+        <div className="max-w-xl">
+          <SectionLabel>PCX Computación</SectionLabel>
+          <h1 className="mt-6 text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Servicio técnico para tu computadora.
           </h1>
-        </Reveal>
-
-        <Reveal delay={200}>
-          <p className="mt-8 max-w-md text-base leading-relaxed text-white/70">
-            Reparamos, optimizamos y potenciamos tu equipo.
+          <p className="mt-6 text-sm leading-7 text-neutral-300 sm:text-base">
+            Reparación y mantenimiento de PCs y notebooks.
             <br />
-            Soluciones reales para que nada te frene.
+            Hardware, software y atención personalizada.
           </p>
-        </Reveal>
 
-        <Reveal delay={300}>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/reparaciones"
-              className="flex items-center gap-8 bg-orange-500 px-6 py-4 text-sm font-semibold text-black transition hover:bg-orange-400"
+              className="inline-flex h-12 items-center gap-3 rounded-md bg-orange-600 px-6 text-sm font-semibold text-white transition hover:bg-orange-500"
             >
-              Solicitar reparación <ArrowRight size={18} />
+              Solicitar reparación <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/catalogo"
-              className="flex items-center gap-8 border border-white/15 bg-white/5 px-6 py-4 text-sm font-semibold text-white transition hover:border-orange-500/60"
+              className="inline-flex h-12 items-center gap-3 rounded-md border border-neutral-700 px-6 text-sm font-semibold text-white transition hover:border-neutral-500"
             >
-              Explorar catálogo <ArrowUpRight size={18} />
+              Ver catálogo <ArrowRight className="size-4" />
             </Link>
           </div>
 
-          <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/50">
-            <ShieldCheck size={16} className="text-orange-500" />
-            Diagnóstico claro <span>·</span> Atención personalizada <span>·</span> Trabajo garantizado
+          <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-neutral-400">
+            <ShieldCheck className="size-4" />
+            Diagnóstico claro <span>·</span> Atención personalizada <span>·</span> Presupuesto previo
           </p>
-        </Reveal>
-      </div>
-
-      {/* Detalle inferior derecho */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-8 hidden lg:block">
-        <div className="mx-auto flex max-w-6xl justify-end px-4">
-          <div className="flex items-center gap-6 text-xs">
-            <div className="flex items-center gap-3">
-              <Plus size={18} className="text-orange-500" />
-              <div>
-                <p className="font-semibold uppercase tracking-widest text-white">
-                  Rendimiento sin límites
-                </p>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
-                  Hardware · Software · Pasión
-                </p>
-              </div>
-            </div>
-            <span className="border-l border-white/15 pl-6 text-white/50">PCX / 01</span>
-          </div>
         </div>
       </div>
 
-      <p className="absolute right-4 top-1/2 hidden -translate-y-1/2 text-[10px] uppercase tracking-[0.3em] text-white/30 [writing-mode:vertical-rl] xl:block">
-        Más que tecnología. Tu próximo nivel.
-      </p>
+      <div className="absolute bottom-8 right-8 hidden border-l border-neutral-700 pl-4 text-xs lg:block">
+        <p className="text-neutral-200">PCs de escritorio y notebooks</p>
+        <p className="mt-1 text-[10px] text-neutral-500">Reparación · Mantenimiento · Actualización</p>
+      </div>
     </section>
   );
 }

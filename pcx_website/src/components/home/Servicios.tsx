@@ -1,16 +1,15 @@
-import Link from "next/link";
-import { ArrowUpRight, Code2, Cpu, Monitor, Wrench, type LucideIcon } from "lucide-react";
-import Eyebrow from "./Eyebrow";
-import Reveal from "./Reveal";
+import { ArrowRight, Code2, Cpu, Monitor, Wrench, type LucideIcon } from "lucide-react";
+import SectionLabel from "./SectionLabel";
 
 type Servicio = {
   _id: string;
-  etiqueta?: string;
   nombre: string;
   icono?: string;
   descripcion?: string;
+  etiqueta?: string;
 };
 
+// Las keys tienen que coincidir con el valor del campo "icono" en Sanity
 const ICONOS: Record<string, LucideIcon> = {
   wrench: Wrench,
   code: Code2,
@@ -18,68 +17,68 @@ const ICONOS: Record<string, LucideIcon> = {
   monitor: Monitor,
 };
 
-const RESPALDO: Servicio[] = [
-  { _id: "1", etiqueta: "Hardware", nombre: "Reparación de equipos", icono: "wrench", descripcion: "Encontramos la falla y la solucionamos. Notebooks y PCs, en las mejores manos." },
-  { _id: "2", etiqueta: "Software", nombre: "Software y sistemas", icono: "code", descripcion: "Instalación, optimización y eliminación de virus. Todo funcionando como debería." },
-  { _id: "3", etiqueta: "Upgrades", nombre: "Potenciá tu PC", icono: "cpu", descripcion: "Más velocidad, más capacidad, más posibilidades. Actualizá tu equipo con nosotros." },
-  { _id: "4", etiqueta: "PC a medida", nombre: "Armado a tu medida", icono: "monitor", descripcion: "Para jugar, trabajar o crear. Diseñamos la computadora que realmente necesitás." },
-];
-
-export default function Servicios({ servicios = [] }: { servicios?: Servicio[] }) {
-  const items = servicios.length ? servicios : RESPALDO;
+export default function Servicios({
+  servicios,
+  whatsapp,
+}: {
+  servicios: Servicio[];
+  whatsapp: string;
+}) {
+  const urlPara = (nombre: string) => {
+    const msg = `Hola! Quiero consultar por el servicio: ${nombre}.`;
+    return `${whatsapp}${whatsapp.includes("?") ? "&" : "?"}text=${encodeURIComponent(msg)}`;
+  };
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-24">
-      <Reveal>
-        <Eyebrow>Lo que hacemos</Eyebrow>
-        <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">
-            Tu tecnología. <span className="font-normal text-white/50">Nuestra especialidad.</span>
-          </h2>
-          <p className="max-w-xs text-sm leading-relaxed text-white/50 md:text-right">
-            Desde esa falla que te complica el día hasta el equipo que siempre quisiste.
+    <section className="bg-neutral-950">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <SectionLabel>Nuestros servicios</SectionLabel>
+            <h2 className="mt-5 text-3xl font-medium tracking-tight text-white">
+              Hardware y software, <span className="text-neutral-400">en un solo lugar.</span>
+            </h2>
+          </div>
+          <p className="max-w-xs text-sm text-neutral-400 md:text-right">
+            Reparación, mantenimiento y actualización para particulares y equipos de trabajo.
           </p>
         </div>
-      </Reveal>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((s, i) => {
-          const Icon = ICONOS[s.icono ?? ""] ?? Wrench;
-          return (
-            <Reveal key={s._id} delay={i * 80} className="h-full">
-              {/* Las 2 primeras llevan a reparación, las otras 2 al catálogo */}
-              <Link
-                href={i < 2 ? "/reparaciones" : "/catalogo"}
-                className="group flex h-full flex-col rounded-xl border border-white/10 bg-[#141414] p-7 transition hover:border-orange-500/50"
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {servicios.map((s, i) => {
+            const Icono = ICONOS[s.icono?.toLowerCase() ?? ""] ?? Wrench;
+            return (
+              <li
+                key={s._id}
+                className="flex flex-col rounded-lg border border-neutral-800 bg-neutral-900/60 p-6"
               >
                 <div className="flex items-start justify-between">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-500">
-                    <Icon size={26} />
-                  </span>
-                  <span className="font-display text-3xl text-white/20">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <Icono className="size-6 text-neutral-300" strokeWidth={1.5} />
+                  <span className="text-xs text-neutral-500">{String(i + 1).padStart(2, "0")}</span>
                 </div>
-
                 {s.etiqueta && (
-                  <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-500">
+                  <p className="mt-8 text-[10px] font-medium uppercase tracking-[0.15em] text-orange-500">
                     {s.etiqueta}
                   </p>
                 )}
-                <h3 className="mt-2 text-xl font-semibold text-white">{s.nombre}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-white/50">{s.descripcion}</p>
-
-                <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-white">
-                  Conocé más
-                  <ArrowUpRight
-                    size={16}
-                    className="text-orange-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  />
+                <h3 className="mt-3 text-lg font-medium text-white">{s.nombre}</h3>
+                {s.descripcion && (
+                  <p className="mt-3 text-sm leading-6 text-neutral-400">{s.descripcion}</p>
+                )}
+                <div className="mt-auto pt-8">
+                  <a
+                    href={urlPara(s.nombre)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between border-t border-neutral-800 pt-4 text-xs text-white transition hover:text-orange-400"
+                  >
+                    Consultar servicio <ArrowRight className="size-3.5" />
+                  </a>
                 </div>
-              </Link>
-            </Reveal>
-          );
-        })}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

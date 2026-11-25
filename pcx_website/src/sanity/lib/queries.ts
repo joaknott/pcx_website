@@ -21,9 +21,11 @@ export const trabajosDestacadosQuery = groq`
   }
 `;
 // Function to be used at day 3
-export const productosQuery = groq` 
-  *[_type == "producto" && disponible == true] | order(_createdAt desc){
+export const productosQuery = groq`
+  *[_type == "producto" && disponible == true] | order(orden asc, _createdAt desc){
     _id, nombre, "slug": slug.current, categoria, badge, precio, estado,
-    descripcion, "imagen": imagenes[0]
+    descripcionCorta, descripcion, descripcionDetallada, especificaciones,
+    "imagen": imagenes[0],
+    imagenes
   }
 `;

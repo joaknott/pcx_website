@@ -2,6 +2,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/assets/icono-pcx.png";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -28,15 +30,21 @@ export default function Navbar({ whatsappUrl }: { whatsappUrl: string }) {
   return (
     <nav className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link
-          href="/"
-          onClick={() => setOpen(false)}
-          className="font-display text-2xl font-bold italic uppercase tracking-tight"
-        >
-          PCX <span className="text-accent">Computación</span>
-        </Link>
+      <Link
+        href="/"
+        aria-label="PCX Computación, ir al inicio"
+        onClick={() => setOpen(false)}
+        className="flex items-center"
+      >
+        <Image
+          src={logo}
+          alt="PCX Computación"
+          priority
+          className="h-14 w-auto md:h-18"
+        />
+      </Link>
 
-        {/* Desktop */}
+        {/* desktop */}
         <div className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
             <Link
@@ -72,7 +80,7 @@ export default function Navbar({ whatsappUrl }: { whatsappUrl: string }) {
         </button>
       </div>
 
-      {/* Mobile */}
+      {/* mobil */}
       {open && (
         <div className="flex flex-col gap-1 border-t border-border bg-surface px-4 py-3 md:hidden">
           {links.map((l) => (

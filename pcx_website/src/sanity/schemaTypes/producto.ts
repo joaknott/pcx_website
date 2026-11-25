@@ -35,6 +35,30 @@ export const producto = defineType({
     }),
     defineField({ name: 'descripcionCorta', title: 'Descripción corta', type: 'string', validation: (r) => r.max(120) }),
     defineField({ name: 'descripcion', title: 'Descripción completa', type: 'text', rows: 4 }),
+
+    // NUEVOS
+    defineField({
+      name: 'descripcionDetallada',
+      title: 'Descripción detallada (popup)',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
+    defineField({
+      name: 'especificaciones',
+      title: 'Especificaciones',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'label', title: 'Característica', type: 'string' }),
+            defineField({ name: 'valor', title: 'Valor', type: 'string' }),
+          ],
+          preview: { select: { title: 'label', subtitle: 'valor' } },
+        },
+      ],
+    }),
+
     defineField({ name: 'precio', title: 'Precio (opcional)', type: 'number' }),
     defineField({
       name: 'estado',

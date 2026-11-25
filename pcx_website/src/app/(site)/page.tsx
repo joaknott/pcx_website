@@ -1,26 +1,29 @@
 import { client } from "@/sanity/lib/client";
-import { serviciosQuery, trabajosDestacadosQuery } from "@/sanity/lib/queries";
+import { serviciosQuery } from "@/sanity/lib/queries";
+import { getWhatsAppUrl } from "@/sanity/lib/sitio";
+import { getHeroMedia } from "@/sanity/lib/hero";
 import Hero from "@/components/home/Hero";
 import Beneficios from "@/components/home/Beneficios";
 import Servicios from "@/components/home/Servicios";
-import BannerEquipate from "@/components/home/BannerEquipate";
-import Trabajos from "@/components/home/Trabajos";
-import CtaFinal from "@/components/home/CtaFinal";
+import Productos from "@/components/home/Productos";
+import ComoTrabajamos from "@/components/home/ComoTrabajamos";
+import ContactoCta from "@/components/home/ContactoCta";
 
 export default async function Home() {
-  const [servicios, trabajos] = await Promise.all([
+  const [servicios, whatsapp, media] = await Promise.all([
     client.fetch(serviciosQuery, {}, { next: { revalidate: 60 } }),
-    client.fetch(trabajosDestacadosQuery, {}, { next: { revalidate: 60 } }),
+    getWhatsAppUrl(),
+    getHeroMedia(),
   ]);
 
   return (
     <>
-      <Hero />
+      <Hero media={media} />
       <Beneficios />
-      <Servicios servicios={servicios} />
-      <BannerEquipate />
-      <Trabajos trabajos={trabajos} />
-      <CtaFinal />
+      <Servicios servicios={servicios} whatsapp={whatsapp} />
+      <Productos />
+      <ComoTrabajamos />
+      <ContactoCta />
     </>
   );
 }

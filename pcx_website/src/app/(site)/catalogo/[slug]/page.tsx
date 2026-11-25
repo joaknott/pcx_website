@@ -8,6 +8,8 @@ import { CATEGORIAS } from "@/sanity/lib/categorias";
 import { getWhatsAppUrl } from "@/sanity/lib/sitio";
 import { urlFor } from "@/sanity/lib/image";
 
+
+/* Esta cagada no funciona nose porke, hay que solucionar */
 export default function ProductoPage({ params }: { params: Promise<{ slug: string }> }) {
   return (
     <div className="bg-neutral-100 text-neutral-900">
