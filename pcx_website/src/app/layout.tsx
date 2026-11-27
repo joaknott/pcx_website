@@ -24,6 +24,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PCX Computación",
   description: "Reparación, mantenimiento y venta de equipos y periféricos.",
+  icons: {
+    icon: "/icono-pcx.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -36,3 +39,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 } 
+
