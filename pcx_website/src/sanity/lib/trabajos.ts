@@ -21,5 +21,5 @@ export async function getTrabajos(): Promise<Trabajo[]> {
       "imagenes": imagenes[defined(asset)],
       "videos": videos[defined(asset)].asset->url
     }`,
-  );
+  );    
 }
