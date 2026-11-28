@@ -5,6 +5,7 @@ import { CATEGORIAS } from "@/sanity/lib/categorias";
 import { urlFor } from "@/sanity/lib/image";
 import type { Producto } from "@/sanity/lib/catalogo";
 
+
 // Ícono de respaldo cuando el producto no tiene imagen.
 // Ajustá las keys a los `value` reales de tu CATEGORIAS.
 const ICONOS: Record<string, typeof Package> = {

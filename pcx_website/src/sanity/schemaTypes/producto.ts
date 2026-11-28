@@ -1,4 +1,12 @@
 import { defineField, defineType } from 'sanity'
+import { CATEGORIAS, SUBCATEGORIAS } from "../lib/categorias";
+
+const opcionesSub = Object.entries(SUBCATEGORIAS).flatMap(([cat, subs]) =>
+  subs.map((s) => ({
+    title: `${CATEGORIAS.find((c) => c.value === cat)?.label} → ${s.label}`,
+    value: s.value,
+  }))
+);
 
 export const producto = defineType({
   name: 'producto',
@@ -18,14 +26,26 @@ export const producto = defineType({
       title: 'Categoría',
       type: 'string',
       options: {
-        list: [
-          { title: 'Computadoras', value: 'computadoras' },
-          { title: 'Periféricos', value: 'perifericos' },
-          { title: 'Componentes', value: 'componentes' },
-          { title: 'Software y sistemas', value: 'software' },
-        ],
+        list: CATEGORIAS.map((c) => ({ title: c.label, value: c.value })),
       },
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'subcategoria',
+      title: 'Subcategoría',
+      type: 'string',
+      options: { list: opcionesSub },
+      hidden: ({ document }) => !SUBCATEGORIAS[document?.categoria as string],
+      validation: (r) =>
+        r.custom((value, context) => {
+          const cat = context.document?.categoria as string | undefined;
+          const subs = cat ? SUBCATEGORIAS[cat] : undefined;
+          if (!subs) return true; 
+          if (!value) return 'Elegí una subcategoría';
+          if (!subs.some((s) => s.value === value))
+            return 'Esa subcategoría no pertenece a la categoría elegida';
+          return true;
+        }),
     }),
     defineField({
       name: 'badge',

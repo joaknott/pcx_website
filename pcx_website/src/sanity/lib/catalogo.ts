@@ -8,6 +8,7 @@ export type Producto = {
   nombre: string;
   slug: string;
   categoria: CategoriaValue;
+  subcategoria?: string;
   badge?: string;
   descripcionCorta?: string;
   descripcion?: string;
@@ -18,7 +19,7 @@ export type Producto = {
 };
 
 const CAMPOS = `
-  _id, nombre, "slug": slug.current, categoria, badge, descripcionCorta, descripcion,
+  _id, nombre, "slug": slug.current, categoria, subcategoria, badge, descripcionCorta, descripcion,
   precio, estado, disponible, "imagen": imagenes[0]
 `;
 

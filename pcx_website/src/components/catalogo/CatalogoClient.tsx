@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, MessageCircle, Search, ShieldCheck } from "lucide-react";
-import { CATEGORIAS } from "@/sanity/lib/categorias";
+import { CATEGORIAS, SUBCATEGORIAS } from "@/sanity/lib/categorias";
 import type { Producto } from "@/sanity/lib/catalogo";
 import ProductCard from "./ProductCard";
 
@@ -17,14 +17,21 @@ export default function CatalogoClient({
   whatsapp: string;
 }) {
   const [categoria, setCategoria] = useState("todos");
+  const [subcategoria, setSubcategoria] = useState<string | null>(null);
   const [busqueda, setBusqueda] = useState("");
   const [orden, setOrden] = useState<Orden>("recomendados");
+
+  function elegirCategoria(valor: string) {
+    setCategoria(valor);
+    setSubcategoria(null);
+  }
 
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
     let lista = productos.filter(
       (p) =>
         (categoria === "todos" || p.categoria === categoria) &&
+        (!subcategoria || p.subcategoria === subcategoria) &&
         (!q || p.nombre.toLowerCase().includes(q))
     );
     if (orden === "nombre") lista = [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -33,13 +40,17 @@ export default function CatalogoClient({
     if (orden === "precio-desc")
       lista = [...lista].sort((a, b) => (b.precio ?? -1) - (a.precio ?? -1));
     return lista;
-  }, [productos, categoria, busqueda, orden]);
+  }, [productos, categoria, subcategoria, busqueda, orden]);
 
   const contar = (valor: string) =>
     valor === "todos" ? productos.length : productos.filter((p) => p.categoria === valor).length;
 
-  const tituloActual =
-    categoria === "todos"
+  const contarSub = (cat: string, sub: string) =>
+    productos.filter((p) => p.categoria === cat && p.subcategoria === sub).length;
+
+  const tituloActual = subcategoria
+    ? SUBCATEGORIAS[categoria]?.find((s) => s.value === subcategoria)?.label ?? "Productos"
+    : categoria === "todos"
       ? "Todos los productos"
       : CATEGORIAS.find((c) => c.value === categoria)?.label ?? "Productos";
 
@@ -73,7 +84,6 @@ export default function CatalogoClient({
       </section>
 
       <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <nav className="py-6 text-xs text-neutral-500">
           <Link href="/" className="hover:text-neutral-900">Inicio</Link>
           <span className="mx-2">/</span>
@@ -87,21 +97,52 @@ export default function CatalogoClient({
             <ul className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
               {items.map((c) => {
                 const activa = categoria === c.value;
+                const subs = activa
+                  ? (SUBCATEGORIAS[c.value] ?? []).filter((s) => contarSub(c.value, s.value) > 0)
+                  : [];
+
                 return (
-                  <li key={c.value} className="shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setCategoria(c.value)}
-                      className={`flex w-full items-center justify-between gap-6 rounded-md px-4 py-3 text-left text-sm transition ${
-                        activa
-                          ? "bg-orange-100 font-semibold text-orange-800"
-                          : "text-neutral-600 hover:bg-neutral-200"
-                      }`}
-                    >
-                      <span>{c.label}</span>
-                      <span className="text-xs">{contar(c.value)}</span>
-                    </button>
-                  </li>
+                  <Fragment key={c.value}>
+                    <li className="shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => elegirCategoria(c.value)}
+                        className={`flex w-full items-center justify-between gap-6 rounded-md px-4 py-3 text-left text-sm transition ${
+                          activa && !subcategoria
+                            ? "bg-orange-100 font-semibold text-orange-800"
+                            : activa
+                              ? "font-semibold text-neutral-900 hover:bg-neutral-200"
+                              : "text-neutral-600 hover:bg-neutral-200"
+                        }`}
+                      >
+                        <span>{c.label}</span>
+                        <span className="text-xs">{contar(c.value)}</span>
+                      </button>
+                    </li>
+
+                    {subs.map((s) => {
+                      const subActiva = subcategoria === s.value;
+                      return (
+                        <li
+                          key={s.value}
+                          className="shrink-0 lg:ml-4 lg:border-l lg:border-neutral-300"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setSubcategoria(subActiva ? null : s.value)}
+                            className={`flex w-full items-center justify-between gap-6 rounded-md px-4 py-2 text-left text-sm transition ${
+                              subActiva
+                                ? "bg-orange-100 font-semibold text-orange-800"
+                                : "text-neutral-600 hover:bg-neutral-200"
+                            }`}
+                          >
+                            <span>{s.label}</span>
+                            <span className="text-xs">{contarSub(c.value, s.value)}</span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </Fragment>
                 );
               })}
             </ul>
