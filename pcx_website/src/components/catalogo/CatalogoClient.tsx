@@ -202,7 +202,7 @@ export default function CatalogoClient({
             ) : (
               <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {filtrados.map((p) => (
-                  <ProductCard key={p._id ?? p.slug} producto={p} />
+                  <ProductCard key={p._id ?? p.slug} producto={p} whatsapp={whatsapp} />
                 ))}
               </div>
             )}
